@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +11,15 @@ import ProfileSettings from "./pages/settings/ProfileSettings";
 import SecuritySettings from "./pages/settings/SecuritySettings";
 import NotificationSettings from "./pages/settings/NotificationSettings";
 import IntegrationSettings from "./pages/settings/IntegrationSettings";
+import Recruitment from "./pages/Recruitment";
+import Operations from "./pages/Operations";
+import CandidatesTab from "./pages/recruitment/CandidatesTab";
+import ApprovedTab from "./pages/recruitment/ApprovedTab";
+import HistoryTab from "./pages/recruitment/HistoryTab";
+import AttendanceTab from "./pages/operations/AttendanceTab";
+import ClientsTab from "./pages/operations/ClientsTab";
+import PaymentsTab from "./pages/operations/PaymentsTab";
+import Messages from "./pages/Messages";
 
 const queryClient = new QueryClient();
 
@@ -31,13 +41,29 @@ const App = () => (
             <Route path="integrations" element={<IntegrationSettings />} />
           </Route>
 
-          {/* Future routes will be added here */}
-          <Route path="/recruitment" element={<NotFound />} />
-          <Route path="/operations" element={<NotFound />} />
+          {/* Recruitment routes */}
+          <Route path="/recruitment" element={<Recruitment />}>
+            <Route index element={<CandidatesTab />} />
+            <Route path="candidates" element={<CandidatesTab />} />
+            <Route path="approved" element={<ApprovedTab />} />
+            <Route path="history" element={<HistoryTab />} />
+          </Route>
+
+          {/* Operations routes */}
+          <Route path="/operations" element={<Operations />}>
+            <Route index element={<AttendanceTab />} />
+            <Route path="attendance" element={<AttendanceTab />} />
+            <Route path="clients" element={<ClientsTab />} />
+            <Route path="payments" element={<PaymentsTab />} />
+          </Route>
+
+          {/* Messages route */}
+          <Route path="/messages" element={<Messages />} />
+          
+          {/* Company and Payments routes */}
           <Route path="/companies" element={<NotFound />} />
           <Route path="/payments" element={<NotFound />} />
           <Route path="/documents" element={<NotFound />} />
-          <Route path="/messages" element={<NotFound />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

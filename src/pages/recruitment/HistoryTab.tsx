@@ -1,0 +1,72 @@
+
+import React from 'react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { mockCandidates, mockDrivers } from '@/services/mockData';
+
+const HistoryTab = () => {
+  // Combining all candidates and drivers for history
+  const allCandidates = [...mockCandidates, ...mockDrivers];
+  
+  // Sort by most recent
+  const sortedCandidates = [...allCandidates].sort((a, b) => 
+    new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
+  
+  // Helper function to get status badge
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return <Badge variant="default">Aprovado</Badge>;
+      case 'rejected':
+        return <Badge variant="destructive">Rejeitado</Badge>;
+      default:
+        return <Badge variant="outline">Em Processo</Badge>;
+    }
+  };
+  
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Histórico de Candidatos</h2>
+        <Button variant="outline">Exportar</Button>
+      </div>
+      
+      <div className="border rounded-md">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Data do Cadastro</TableHead>
+              <TableHead>Última Atualização</TableHead>
+              <TableHead>Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedCandidates.map((candidate) => (
+              <TableRow key={candidate.id}>
+                <TableCell className="font-medium">{candidate.name}</TableCell>
+                <TableCell>{candidate.email}</TableCell>
+                <TableCell>{getStatusBadge(candidate.status)}</TableCell>
+                <TableCell>
+                  {new Date(candidate.createdAt).toLocaleDateString('pt-BR')}
+                </TableCell>
+                <TableCell>
+                  {new Date(candidate.updatedAt).toLocaleDateString('pt-BR')}
+                </TableCell>
+                <TableCell>
+                  <Button variant="outline" size="sm">Ver Detalhes</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
+};
+
+export default HistoryTab;
