@@ -8,8 +8,8 @@ import { Input } from '@/components/ui/input';
 import { TruckIcon } from 'lucide-react';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@rhentregadores.com');
+  const [password, setPassword] = useState('123456');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { login, isAuthenticated } = useAuth();
 
@@ -77,6 +77,11 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+              </div>
+              <div className="p-3 bg-indigo-50 rounded-lg text-xs text-indigo-800">
+                <p><strong>Credenciais de teste:</strong></p>
+                <p>Email: admin@rhentregadores.com</p>
+                <p>Senha: 123456</p>
               </div>
             </CardContent>
             <CardFooter>

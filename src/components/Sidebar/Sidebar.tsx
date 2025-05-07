@@ -17,17 +17,18 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { UserPermissions } from '@/types/users';
 
 const navigationItems = [
-  { name: 'Dashboard', href: '/', icon: TruckIcon, permission: 'read' },
-  { name: 'Recrutamento', href: '/recruitment', icon: Users, permission: 'read' },
-  { name: 'Operacional', href: '/operations', icon: Clock, permission: 'read' },
-  { name: 'Empresas', href: '/companies', icon: Building, permission: 'read' },
-  { name: 'Pagamentos', href: '/payments', icon: Briefcase, permission: 'read' },
-  { name: 'Documentos', href: '/documents', icon: FileText, permission: 'read' },
-  { name: 'Mensagens', href: '/messages', icon: Mail, permission: 'read' },
-  { name: 'Usuários', href: '/users', icon: UserCog, permission: 'manageUsers' },
-  { name: 'Configurações', href: '/settings', icon: Settings, permission: 'read' },
+  { name: 'Dashboard', href: '/', icon: TruckIcon, permission: 'read' as keyof UserPermissions },
+  { name: 'Recrutamento', href: '/recruitment', icon: Users, permission: 'read' as keyof UserPermissions },
+  { name: 'Operacional', href: '/operations', icon: Clock, permission: 'read' as keyof UserPermissions },
+  { name: 'Empresas', href: '/companies', icon: Building, permission: 'read' as keyof UserPermissions },
+  { name: 'Pagamentos', href: '/payments', icon: Briefcase, permission: 'read' as keyof UserPermissions },
+  { name: 'Documentos', href: '/documents', icon: FileText, permission: 'read' as keyof UserPermissions },
+  { name: 'Mensagens', href: '/messages', icon: Mail, permission: 'read' as keyof UserPermissions },
+  { name: 'Usuários', href: '/users', icon: UserCog, permission: 'manageUsers' as keyof UserPermissions },
+  { name: 'Configurações', href: '/settings', icon: Settings, permission: 'read' as keyof UserPermissions },
 ];
 
 export const Sidebar = () => {
