@@ -1,6 +1,6 @@
 
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
-import { User, UserRole, hasPermission } from '@/types/users';
+import { User, UserRole, hasPermission as checkPermission, UserPermissions } from '@/types/users';
 import { mockUsers } from '@/services/mockData';
 import { toast } from '@/components/ui/use-toast';
 
@@ -10,7 +10,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  hasPermission: (permission: string) => boolean;
+  hasPermission: (permission: keyof UserPermissions) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -66,9 +66,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem('currentUser');
   };
 
-  const checkPermission = (permission: string): boolean => {
+  const checkUserPermission = (permission: keyof UserPermissions): boolean => {
     if (!currentUser) return false;
-    return hasPermission(currentUser.role, permission as keyof ReturnType<typeof hasPermission>);
+    return checkPermission(currentUser.role, permission);
   };
 
   return (
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         isLoading,
         login,
         logout,
-        hasPermission: checkPermission
+        hasPermission: checkUserPermission
       }}
     >
       {children}

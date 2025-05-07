@@ -2,10 +2,11 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { UserPermissions } from '@/types/users';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredPermission?: string;
+  requiredPermission?: keyof UserPermissions;
 }
 
 export const ProtectedRoute = ({ children, requiredPermission }: ProtectedRouteProps) => {
