@@ -111,6 +111,30 @@
   .hover-scale {
     @apply transition-transform duration-200 hover:scale-105;
   }
+
+  .shadow-soft {
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+  }
+  
+  .shadow-colored {
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.2);
+  }
+  
+  .menu-highlight {
+    @apply relative overflow-hidden;
+  }
+  
+  .menu-highlight::after {
+    @apply content-[''] absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 ease-in-out;
+  }
+  
+  .menu-highlight:hover::after {
+    @apply w-full;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
 }
 
 /* Aprimorando estilo de cards */
@@ -128,6 +152,25 @@
   animation: fadeIn 0.5s ease-out forwards;
 }
 
+/* Novas animações */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.3s ease-out forwards;
+}
+
 /* Estilos para o layout principal */
 #root {
   max-width: 100%;
@@ -135,4 +178,31 @@
   padding: 0;
   text-align: left;
   @apply h-screen overflow-hidden;
+}
+
+/* Enhanced inputs */
+input, select, textarea {
+  @apply transition-shadow duration-200;
+}
+
+input:focus, select:focus, textarea:focus {
+  @apply ring-2 ring-indigo-200 ring-offset-1;
+}
+
+/* Enhanced buttons */
+button:not(.unstyled) {
+  @apply transition-all duration-200;
+}
+
+/* Card and panel designs */
+.panel {
+  @apply bg-white rounded-xl shadow-soft border border-gray-100;
+}
+
+.panel-header {
+  @apply p-6 border-b border-gray-100;
+}
+
+.panel-body {
+  @apply p-6;
 }

@@ -1,6 +1,6 @@
-
 import { Candidate } from '../types/recruitment';
 import { Driver, Attendance, Client, Payment, DriverType, DriverPaymentMethod, PaymentStatus } from '../types/operations';
+import { User } from '@/types/users';
 
 // Mock candidates data
 export const mockCandidates: Candidate[] = [
@@ -309,5 +309,49 @@ export const mockPayments: Payment[] = [
     status: 'pending',
     paymentMethod: 'pix',
     createdAt: '2023-05-16T09:15:00Z'
+  }
+];
+
+// Mock users with different roles
+export const mockUsers: User[] = [
+  {
+    id: 'user-1',
+    name: 'Admin Master',
+    email: 'admin@rhentregadores.com',
+    password: 'admin123', // In a real app, this would be hashed
+    role: 'admin',
+    createdAt: '2023-01-01T10:00:00Z',
+    lastLogin: '2023-05-01T08:30:00Z',
+    active: true
+  },
+  {
+    id: 'user-2',
+    name: 'Marcela Gestora',
+    email: 'gestora@rhentregadores.com',
+    password: 'gestor123',
+    role: 'gestor',
+    createdAt: '2023-01-15T14:30:00Z',
+    lastLogin: '2023-04-28T09:15:00Z',
+    active: true
+  },
+  {
+    id: 'user-3',
+    name: 'João Suporte',
+    email: 'suporte@rhentregadores.com',
+    password: 'suporte123',
+    role: 'suporte',
+    createdAt: '2023-02-05T11:20:00Z',
+    lastLogin: '2023-05-01T10:45:00Z',
+    active: true
+  },
+  {
+    id: 'user-4',
+    name: 'Ana Silva',
+    email: 'ana@rhentregadores.com',
+    password: 'ana123',
+    role: 'gestor',
+    createdAt: '2023-03-10T09:00:00Z',
+    lastLogin: '2023-04-25T14:20:00Z',
+    active: false
   }
 ];
