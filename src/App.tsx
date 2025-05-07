@@ -20,6 +20,8 @@ import AttendanceTab from "./pages/operations/AttendanceTab";
 import ClientsTab from "./pages/operations/ClientsTab";
 import PaymentsTab from "./pages/operations/PaymentsTab";
 import Messages from "./pages/Messages";
+import Companies from "./pages/Companies";
+import Documents from "./pages/Documents";
 
 const queryClient = new QueryClient();
 
@@ -60,10 +62,16 @@ const App = () => (
           {/* Messages route */}
           <Route path="/messages" element={<Messages />} />
           
-          {/* Company and Payments routes */}
-          <Route path="/companies" element={<NotFound />} />
-          <Route path="/payments" element={<NotFound />} />
-          <Route path="/documents" element={<NotFound />} />
+          {/* Company route */}
+          <Route path="/companies" element={<Companies />} />
+          
+          {/* Documents route */}
+          <Route path="/documents" element={<Documents />} />
+          
+          {/* Payments route - redirects to Operations/payments */}
+          <Route path="/payments" element={<Operations />}>
+            <Route index element={<PaymentsTab />} />
+          </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
