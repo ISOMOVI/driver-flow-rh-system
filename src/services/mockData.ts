@@ -1,6 +1,6 @@
 
 import { Candidate } from '../types/recruitment';
-import { Driver, Attendance, Client, Payment } from '../types/operations';
+import { Driver, Attendance, Client, Payment, DriverType, DriverPaymentMethod, PaymentStatus } from '../types/operations';
 
 // Mock candidates data
 export const mockCandidates: Candidate[] = [
@@ -82,12 +82,18 @@ export const mockDrivers: Driver[] = [
     videoUrl: 'https://example.com/videos/ana-presentation',
     active: true,
     clientId: '1',
+    driverType: 'fixed',
+    paymentMethod: 'per_km',
+    ratePerKm: 1.20,
+    contractSigned: true,
+    contractUrl: 'https://example.com/contracts/ana-ferreira',
     paymentInfo: {
       bank: 'Banco do Brasil',
       agency: '1234',
       account: '56789-0',
       pixKey: 'ana.ferreira@email.com',
-    }
+    },
+    lastPayment: '2023-05-05T10:15:00Z'
   },
   {
     id: '5',
@@ -111,12 +117,18 @@ export const mockDrivers: Driver[] = [
     videoUrl: 'https://example.com/videos/carlos-presentation',
     active: true,
     clientId: '2',
+    driverType: 'fixed',
+    paymentMethod: 'fixed_rate',
+    fixedRate: 3500,
+    contractSigned: true,
+    contractUrl: 'https://example.com/contracts/carlos-rodrigues',
     paymentInfo: {
       bank: 'Itaú',
       agency: '5678',
       account: '12345-6',
       pixKey: '789.123.456-00',
-    }
+    },
+    lastPayment: '2023-05-05T11:30:00Z'
   }
 ];
 
@@ -216,6 +228,7 @@ export const mockPayments: Payment[] = [
     id: '1',
     driverId: '4',
     driverName: 'Ana Ferreira',
+    driverType: 'fixed',
     period: {
       start: '2023-04-01',
       end: '2023-04-15'
@@ -224,6 +237,8 @@ export const mockPayments: Payment[] = [
     ratePerKm: 1.20,
     totalAmount: 1440,
     status: 'paid',
+    paymentMethod: 'bank_transfer',
+    createdAt: '2023-04-16T10:00:00Z',
     paidAt: '2023-04-20T14:30:00Z',
     receiptUrl: 'https://example.com/receipts/ana-abril-1'
   },
@@ -231,6 +246,7 @@ export const mockPayments: Payment[] = [
     id: '2',
     driverId: '4',
     driverName: 'Ana Ferreira',
+    driverType: 'fixed',
     period: {
       start: '2023-04-16',
       end: '2023-04-30'
@@ -239,6 +255,8 @@ export const mockPayments: Payment[] = [
     ratePerKm: 1.20,
     totalAmount: 1380,
     status: 'paid',
+    paymentMethod: 'bank_transfer',
+    createdAt: '2023-05-01T09:00:00Z',
     paidAt: '2023-05-05T10:15:00Z',
     receiptUrl: 'https://example.com/receipts/ana-abril-2'
   },
@@ -246,6 +264,7 @@ export const mockPayments: Payment[] = [
     id: '3',
     driverId: '5',
     driverName: 'Carlos Rodrigues',
+    driverType: 'fixed',
     period: {
       start: '2023-04-01',
       end: '2023-04-30'
@@ -254,6 +273,8 @@ export const mockPayments: Payment[] = [
     ratePerKm: 1.50,
     totalAmount: 3750,
     status: 'paid',
+    paymentMethod: 'pix',
+    createdAt: '2023-05-01T11:00:00Z',
     paidAt: '2023-05-05T11:30:00Z',
     receiptUrl: 'https://example.com/receipts/carlos-abril'
   },
@@ -261,6 +282,7 @@ export const mockPayments: Payment[] = [
     id: '4',
     driverId: '4',
     driverName: 'Ana Ferreira',
+    driverType: 'fixed',
     period: {
       start: '2023-05-01',
       end: '2023-05-15'
@@ -268,12 +290,15 @@ export const mockPayments: Payment[] = [
     totalKm: 850,
     ratePerKm: 1.20,
     totalAmount: 1020,
-    status: 'pending'
+    status: 'pending',
+    paymentMethod: 'bank_transfer',
+    createdAt: '2023-05-16T08:30:00Z'
   },
   {
     id: '5',
     driverId: '5',
     driverName: 'Carlos Rodrigues',
+    driverType: 'fixed',
     period: {
       start: '2023-05-01',
       end: '2023-05-15'
@@ -281,6 +306,8 @@ export const mockPayments: Payment[] = [
     totalKm: 1300,
     ratePerKm: 1.50,
     totalAmount: 1950,
-    status: 'pending'
+    status: 'pending',
+    paymentMethod: 'pix',
+    createdAt: '2023-05-16T09:15:00Z'
   }
 ];
