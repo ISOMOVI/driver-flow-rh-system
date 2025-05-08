@@ -28,134 +28,139 @@ import Companies from "./pages/Companies";
 import Documents from "./pages/Documents";
 import Users from "./pages/Users";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Public routes */}
-            <Route path="/login" element={<Login />} />
-            
-            {/* Protected routes */}
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Settings routes */}
-            <Route 
-              path="/settings" 
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<ProfileSettings />} />
-              <Route path="profile" element={<ProfileSettings />} />
-              <Route path="security" element={<SecuritySettings />} />
-              <Route path="notifications" element={<NotificationSettings />} />
-              <Route path="integrations" element={<IntegrationSettings />} />
-            </Route>
+const App = () => {
+  console.log("App rendering");
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/login" element={<Login />} />
+              
+              {/* Protected routes */}
+              <Route 
+                path="/" 
+                element={
+                  <ProtectedRoute>
+                    <Index />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Settings routes */}
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<ProfileSettings />} />
+                <Route path="profile" element={<ProfileSettings />} />
+                <Route path="security" element={<SecuritySettings />} />
+                <Route path="notifications" element={<NotificationSettings />} />
+                <Route path="integrations" element={<IntegrationSettings />} />
+              </Route>
 
-            {/* Recruitment routes */}
-            <Route 
-              path="/recruitment" 
-              element={
-                <ProtectedRoute>
-                  <Recruitment />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<CandidatesTab />} />
-              <Route path="candidates" element={<CandidatesTab />} />
-              <Route path="approved" element={<ApprovedTab />} />
-              <Route path="history" element={<HistoryTab />} />
-            </Route>
+              {/* Recruitment routes */}
+              <Route 
+                path="/recruitment" 
+                element={
+                  <ProtectedRoute>
+                    <Recruitment />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<CandidatesTab />} />
+                <Route path="candidates" element={<CandidatesTab />} />
+                <Route path="approved" element={<ApprovedTab />} />
+                <Route path="history" element={<HistoryTab />} />
+              </Route>
 
-            {/* Operations routes */}
-            <Route 
-              path="/operations" 
-              element={
-                <ProtectedRoute>
-                  <Operations />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<AttendanceTab />} />
-              <Route path="attendance" element={<AttendanceTab />} />
-              <Route path="clients" element={<ClientsTab />} />
-              <Route path="payments" element={<PaymentsTab />} />
-            </Route>
+              {/* Operations routes */}
+              <Route 
+                path="/operations" 
+                element={
+                  <ProtectedRoute>
+                    <Operations />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<AttendanceTab />} />
+                <Route path="attendance" element={<AttendanceTab />} />
+                <Route path="clients" element={<ClientsTab />} />
+                <Route path="payments" element={<PaymentsTab />} />
+              </Route>
 
-            {/* Messages route */}
-            <Route 
-              path="/messages" 
-              element={
-                <ProtectedRoute>
-                  <Messages />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Company route */}
-            <Route 
-              path="/companies" 
-              element={
-                <ProtectedRoute>
-                  <Companies />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Documents route */}
-            <Route 
-              path="/documents" 
-              element={
-                <ProtectedRoute>
-                  <Documents />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Users route - requires special permission */}
-            <Route 
-              path="/users" 
-              element={
-                <ProtectedRoute requiredPermission="manageUsers">
-                  <Users />
-                </ProtectedRoute>
-              }
-            />
-            
-            {/* Payments route - redirects to Operations/payments */}
-            <Route 
-              path="/payments" 
-              element={
-                <ProtectedRoute>
-                  <Operations />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<PaymentsTab />} />
-            </Route>
-            
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+              {/* Messages route */}
+              <Route 
+                path="/messages" 
+                element={
+                  <ProtectedRoute>
+                    <Messages />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Company route */}
+              <Route 
+                path="/companies" 
+                element={
+                  <ProtectedRoute>
+                    <Companies />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Documents route */}
+              <Route 
+                path="/documents" 
+                element={
+                  <ProtectedRoute>
+                    <Documents />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Users route - requires special permission */}
+              <Route 
+                path="/users" 
+                element={
+                  <ProtectedRoute requiredPermission="manageUsers">
+                    <Users />
+                  </ProtectedRoute>
+                }
+              />
+              
+              {/* Payments route - redirects to Operations/payments */}
+              <Route 
+                path="/payments" 
+                element={<Navigate to="/operations/payments" replace />}
+              />
+              
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

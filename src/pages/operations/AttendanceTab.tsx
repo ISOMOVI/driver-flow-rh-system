@@ -1,189 +1,160 @@
 
 import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { mockDrivers } from '@/services/mockData';
+import { mockAttendance, mockDrivers } from '@/services/mockData';
+import { Filter, CalendarRange } from 'lucide-react';
 import { AttendanceFilterModal } from '@/components/operations/AttendanceFilterModal';
-
-// Simulated attendance data
-const mockAttendance = [
-  {
-    id: 'att-1',
-    driverId: mockDrivers[0].id,
-    driverName: mockDrivers[0].name,
-    date: '2025-04-20',
-    checkIn: '08:00',
-    checkOut: '17:30',
-    startKm: 5000,
-    endKm: 5120,
-    totalKm: 120,
-    validated: true,
-    clientId: 'client-1',
-    clientName: 'Empresa A',
-  },
-  {
-    id: 'att-2',
-    driverId: mockDrivers[1].id,
-    driverName: mockDrivers[1].name,
-    date: '2025-04-20',
-    checkIn: '07:45',
-    checkOut: '16:15',
-    startKm: 12500,
-    endKm: 12640,
-    totalKm: 140,
-    validated: true,
-    clientId: 'client-2',
-    clientName: 'Empresa B',
-  },
-  {
-    id: 'att-3',
-    driverId: mockDrivers[2].id,
-    driverName: mockDrivers[2].name,
-    date: '2025-04-20',
-    checkIn: '09:00',
-    checkOut: '18:30',
-    startKm: 8700,
-    endKm: 8800,
-    totalKm: 100,
-    validated: false,
-    clientId: 'client-1',
-    clientName: 'Empresa A',
-  },
-  {
-    id: 'att-4',
-    driverId: mockDrivers[0].id,
-    driverName: mockDrivers[0].name,
-    date: '2025-04-19',
-    checkIn: '08:15',
-    checkOut: '17:45',
-    startKm: 4880,
-    endKm: 5000,
-    totalKm: 120,
-    validated: true,
-    clientId: 'client-1',
-    clientName: 'Empresa A',
-  },
-];
 
 const AttendanceTab = () => {
   const [filterModalOpen, setFilterModalOpen] = useState(false);
-  const [filteredAttendance, setFilteredAttendance] = useState(mockAttendance);
-  const [activeFilters, setActiveFilters] = useState<{
-    startDate?: Date;
-    endDate?: Date;
-    driverId?: string;
-    status?: 'all' | 'validated' | 'pending';
-  }>({});
+  const [filters, setFilters] = useState({
+    startDate: undefined,
+    endDate: undefined,
+    driverId: undefined,
+    status: 'all'
+  });
   
-  const applyFilter = (filters: any) => {
-    let filtered = [...mockAttendance];
+  console.log("Rendering AttendanceTab with filters:", filters);
+  
+  // Apply filters to the attendance records
+  const filteredAttendance = mockAttendance.filter(record => {
+    // Filter by driver ID
+    if (filters.driverId && record.driverId !== filters.driverId) {
+      return false;
+    }
+    
+    // Filter by status
+    if (filters.status === 'validated' && !record.validated) {
+      return false;
+    }
+    if (filters.status === 'pending' && record.validated) {
+      return false;
+    }
     
     // Filter by date range
     if (filters.startDate) {
-      filtered = filtered.filter(att => new Date(att.date) >= filters.startDate);
+      const recordDate = new Date(record.date);
+      const startDate = new Date(filters.startDate);
+      if (recordDate < startDate) {
+        return false;
+      }
     }
     
     if (filters.endDate) {
-      filtered = filtered.filter(att => new Date(att.date) <= filters.endDate);
+      const recordDate = new Date(record.date);
+      const endDate = new Date(filters.endDate);
+      if (recordDate > endDate) {
+        return false;
+      }
     }
     
-    // Filter by driver
-    if (filters.driverId) {
-      filtered = filtered.filter(att => att.driverId === filters.driverId);
-    }
-    
-    // Filter by validation status
-    if (filters.status && filters.status !== 'all') {
-      filtered = filtered.filter(att => {
-        if (filters.status === 'validated') return att.validated;
-        if (filters.status === 'pending') return !att.validated;
-        return true;
-      });
-    }
-    
-    setFilteredAttendance(filtered);
-    setActiveFilters(filters);
+    return true;
+  });
+  
+  // Get driver name by ID
+  const getDriverName = (driverId: string) => {
+    const driver = mockDrivers.find(d => d.id === driverId);
+    return driver ? driver.name : 'Desconhecido';
   };
   
-  const clearFilters = () => {
-    setFilteredAttendance(mockAttendance);
-    setActiveFilters({});
+  const handleFilterChange = (newFilters: any) => {
+    console.log("Applying filters:", newFilters);
+    setFilters(newFilters);
   };
-  
-  const hasActiveFilters = Object.keys(activeFilters).some(
-    key => activeFilters[key as keyof typeof activeFilters] !== undefined
-  );
   
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Registro de Frequência</h2>
-        <div className="flex gap-2">
-          {hasActiveFilters && (
-            <Button 
-              variant="outline" 
-              onClick={clearFilters}
-              className="border-red-200 text-red-700 hover:bg-red-50"
-            >
-              Limpar Filtros
-            </Button>
-          )}
-          <Button 
-            onClick={() => setFilterModalOpen(true)} 
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md"
-          >
-            Filtrar
-          </Button>
-        </div>
+        <Button 
+          onClick={() => setFilterModalOpen(true)} 
+          variant="outline"
+          className="border-indigo-200 text-indigo-700 hover:text-indigo-800 hover:bg-indigo-50"
+        >
+          <Filter className="w-4 h-4 mr-2" /> Filtrar
+        </Button>
       </div>
       
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Data</TableHead>
-            <TableHead>Entregador</TableHead>
-            <TableHead>Cliente</TableHead>
-            <TableHead>Entrada</TableHead>
-            <TableHead>Saída</TableHead>
-            <TableHead>KMs</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredAttendance.map((attendance) => (
-            <TableRow key={attendance.id}>
-              <TableCell>
-                {new Date(attendance.date).toLocaleDateString('pt-BR')}
-              </TableCell>
-              <TableCell className="font-medium">{attendance.driverName}</TableCell>
-              <TableCell>{attendance.clientName}</TableCell>
-              <TableCell>{attendance.checkIn}</TableCell>
-              <TableCell>{attendance.checkOut}</TableCell>
-              <TableCell>{attendance.totalKm} km</TableCell>
-              <TableCell>
-                <Badge variant={attendance.validated ? "default" : "outline"}>
-                  {attendance.validated ? "Validado" : "Pendente"}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  <Button variant="outline" size="sm">Ver</Button>
-                  {!attendance.validated && (
-                    <Button variant="outline" size="sm">Validar</Button>
-                  )}
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      {(filters.startDate || filters.endDate || filters.driverId || filters.status !== 'all') && (
+        <div className="bg-blue-50 p-3 rounded-md flex items-center justify-between">
+          <div className="text-sm text-blue-700">
+            <span className="font-medium">Filtros aplicados:</span>
+            {filters.driverId && (
+              <span className="ml-2">Entregador: {getDriverName(filters.driverId)}</span>
+            )}
+            {filters.status !== 'all' && (
+              <span className="ml-2">Status: {filters.status === 'validated' ? 'Validados' : 'Pendentes'}</span>
+            )}
+            {(filters.startDate || filters.endDate) && (
+              <span className="ml-2">
+                <CalendarRange className="inline w-3 h-3 mr-1" />
+                Período: {filters.startDate ? new Date(filters.startDate).toLocaleDateString('pt-BR') : 'início'} até {filters.endDate ? new Date(filters.endDate).toLocaleDateString('pt-BR') : 'hoje'}
+              </span>
+            )}
+          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setFilters({
+              startDate: undefined,
+              endDate: undefined,
+              driverId: undefined,
+              status: 'all'
+            })}
+            className="text-blue-700 hover:bg-blue-100"
+          >
+            Limpar Filtros
+          </Button>
+        </div>
+      )}
       
-      <AttendanceFilterModal 
+      <div className="border rounded-md">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Data</TableHead>
+              <TableHead>Entregador</TableHead>
+              <TableHead>Entrada</TableHead>
+              <TableHead>Saída</TableHead>
+              <TableHead>KM Inicial</TableHead>
+              <TableHead>KM Final</TableHead>
+              <TableHead>Total KM</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredAttendance.map((record) => (
+              <TableRow key={record.id}>
+                <TableCell>{record.date}</TableCell>
+                <TableCell className="font-medium">{getDriverName(record.driverId)}</TableCell>
+                <TableCell>{record.checkIn}</TableCell>
+                <TableCell>{record.checkOut || '-'}</TableCell>
+                <TableCell>{record.startKm}</TableCell>
+                <TableCell>{record.endKm || '-'}</TableCell>
+                <TableCell>{record.totalKm || '-'}</TableCell>
+                <TableCell>
+                  {record.validated ? (
+                    <Badge variant="default">Validado</Badge>
+                  ) : (
+                    <Badge variant="outline">Pendente</Badge>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Button variant="outline" size="sm">Ver</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      
+      <AttendanceFilterModal
         open={filterModalOpen}
         onOpenChange={setFilterModalOpen}
-        onApplyFilter={applyFilter}
+        onFilter={handleFilterChange}
       />
     </div>
   );

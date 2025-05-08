@@ -23,21 +23,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Load user from localStorage on initial mount
   useEffect(() => {
-    // Check for saved auth in localStorage
+    console.log("AuthProvider: Checking for saved user");
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
       try {
-        setCurrentUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        console.log("AuthProvider: Found saved user", parsedUser);
+        setCurrentUser(parsedUser);
       } catch (error) {
         console.error('Failed to parse saved user:', error);
         localStorage.removeItem('currentUser');
       }
+    } else {
+      console.log("AuthProvider: No saved user found");
     }
     setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    console.log("Login attempt for:", email);
     // In a real app, this would be an API call
     const user = mockUsers.find(u => u.email === email && u.password === password);
     
@@ -48,10 +54,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         lastLogin: new Date().toISOString()
       };
       
+      console.log("Login successful for:", authenticatedUser.name);
       setCurrentUser(authenticatedUser);
       localStorage.setItem('currentUser', JSON.stringify(authenticatedUser));
+      
+      toast({
+        title: "Login realizado com sucesso",
+        description: `Bem-vindo, ${authenticatedUser.name}!`,
+      });
+      
       return true;
     } else {
+      console.log("Login failed: Invalid credentials");
       toast({
         title: "Erro ao fazer login",
         description: "Email ou senha inválidos.",
@@ -62,8 +76,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = () => {
+    console.log("Logging out user");
     setCurrentUser(null);
     localStorage.removeItem('currentUser');
+    toast({
+      title: "Logout realizado",
+      description: "Você foi desconectado do sistema."
+    });
   };
 
   const checkUserPermission = (permission: keyof UserPermissions): boolean => {

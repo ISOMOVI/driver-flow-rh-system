@@ -28,6 +28,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 import {
   Select,
   SelectContent,
@@ -35,8 +37,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
 import { mockDrivers } from '@/services/mockData';
 
 const formSchema = z.object({
@@ -51,13 +51,13 @@ type FormValues = z.infer<typeof formSchema>;
 interface AttendanceFilterModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onApplyFilter: (filters: FormValues) => void;
+  onFilter: (filters: FormValues) => void;
 }
 
 export const AttendanceFilterModal: React.FC<AttendanceFilterModalProps> = ({ 
   open, 
   onOpenChange,
-  onApplyFilter
+  onFilter
 }) => {
   const { toast } = useToast();
   
@@ -72,16 +72,26 @@ export const AttendanceFilterModal: React.FC<AttendanceFilterModalProps> = ({
   });
 
   const onSubmit = (data: FormValues) => {
-    console.log('Filter data:', data);
+    console.log('Filter applied:', data);
     
-    onApplyFilter(data);
+    // Apply filters
+    onFilter(data);
     
     toast({
       title: "Filtros aplicados",
-      description: "Os filtros foram aplicados com sucesso.",
+      description: "A lista de frequência foi atualizada.",
     });
     
     onOpenChange(false);
+  };
+
+  const resetForm = () => {
+    form.reset({
+      startDate: undefined,
+      endDate: undefined,
+      driverId: undefined,
+      status: 'all',
+    });
   };
 
   return (
@@ -92,7 +102,7 @@ export const AttendanceFilterModal: React.FC<AttendanceFilterModalProps> = ({
         </DialogHeader>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
             <FormField
               control={form.control}
               name="startDate"
@@ -181,14 +191,17 @@ export const AttendanceFilterModal: React.FC<AttendanceFilterModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Entregador</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione um entregador" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">Todos</SelectItem>
+                      <SelectItem value="">Todos os entregadores</SelectItem>
                       {mockDrivers.map((driver) => (
                         <SelectItem key={driver.id} value={driver.id}>
                           {driver.name}
@@ -207,7 +220,10 @@ export const AttendanceFilterModal: React.FC<AttendanceFilterModalProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione um status" />
@@ -224,9 +240,9 @@ export const AttendanceFilterModal: React.FC<AttendanceFilterModalProps> = ({
               )}
             />
             
-            <DialogFooter className="pt-4">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancelar
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button type="button" variant="secondary" onClick={resetForm}>
+                Limpar Filtros
               </Button>
               <Button type="submit" className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
                 Aplicar Filtros

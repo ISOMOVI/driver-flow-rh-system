@@ -9,14 +9,18 @@ const Recruitment = () => {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("candidates");
   
+  console.log("Rendering Recruitment component. Path:", location.pathname);
+  
   // Determine the active tab based on the current route
   useEffect(() => {
     const path = location.pathname.split('/').pop() || 'candidates';
+    console.log("Setting active tab to:", path);
     setActiveTab(path);
   }, [location]);
 
   // Handle tab changes
   const handleTabChange = (value: string) => {
+    console.log("Tab changed to:", value);
     setActiveTab(value);
     navigate(`/recruitment/${value}`);
   };

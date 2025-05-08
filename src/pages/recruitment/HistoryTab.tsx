@@ -9,6 +9,8 @@ import { ExportHistoryModal } from '@/components/recruitment/ExportHistoryModal'
 const HistoryTab = () => {
   const [exportModalOpen, setExportModalOpen] = useState(false);
   
+  console.log("Rendering HistoryTab");
+  
   // Combining all candidates and drivers for history
   const allCandidates = [...mockCandidates, ...mockDrivers];
   
@@ -16,6 +18,8 @@ const HistoryTab = () => {
   const sortedCandidates = [...allCandidates].sort((a, b) => 
     new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
+  
+  console.log(`HistoryTab: Found ${sortedCandidates.length} candidates/drivers`);
   
   // Helper function to get status badge
   const getStatusBadge = (status: string) => {

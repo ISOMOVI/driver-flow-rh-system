@@ -21,14 +21,15 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { SearchIcon } from 'lucide-react';
 
 const formSchema = z.object({
   cnpj: z.string().min(14, { message: 'CNPJ inválido' }),
-  name: z.string().min(3, { message: 'Razão social é obrigatória' }),
+  companyName: z.string().min(3, { message: 'Razão social é obrigatória' }),
   address: z.string().min(5, { message: 'Endereço é obrigatório' }),
   contactName: z.string().min(3, { message: 'Nome do responsável é obrigatório' }),
   contactPhone: z.string().min(10, { message: 'Telefone inválido' }),
-  contactEmail: z.string().email({ message: 'E-mail inválido' }),
+  contactEmail: z.string().email({ message: 'Email inválido' }),
   value: z.string().min(1, { message: 'Valor é obrigatório' }),
 });
 
@@ -41,13 +42,13 @@ interface AddClientModalProps {
 
 export const AddClientModal: React.FC<AddClientModalProps> = ({ open, onOpenChange }) => {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       cnpj: '',
-      name: '',
+      companyName: '',
       address: '',
       contactName: '',
       contactPhone: '',
@@ -55,49 +56,6 @@ export const AddClientModal: React.FC<AddClientModalProps> = ({ open, onOpenChan
       value: '',
     },
   });
-
-  const fetchCompanyData = async () => {
-    const cnpj = form.getValues('cnpj');
-    
-    if (!cnpj || cnpj.length < 14) {
-      toast({
-        title: "CNPJ inválido",
-        description: "Por favor, insira um CNPJ válido.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setLoading(true);
-    
-    try {
-      // Simulate API call to fetch company data from Brazil's tax authority
-      // In a real app, this would call an actual API
-      setTimeout(() => {
-        const mockCompanyData = {
-          name: "EMPRESA SIMULADA LTDA",
-          address: "Av. Paulista, 1000, São Paulo - SP",
-        };
-        
-        form.setValue('name', mockCompanyData.name);
-        form.setValue('address', mockCompanyData.address);
-        
-        toast({
-          title: "Dados importados",
-          description: "Dados da empresa foram importados com sucesso.",
-        });
-        
-        setLoading(false);
-      }, 1500);
-    } catch (error) {
-      toast({
-        title: "Erro ao buscar dados",
-        description: "Não foi possível buscar os dados da empresa.",
-        variant: "destructive",
-      });
-      setLoading(false);
-    }
-  };
 
   const onSubmit = (data: FormValues) => {
     // In a real app, this would save to a database
@@ -112,70 +70,79 @@ export const AddClientModal: React.FC<AddClientModalProps> = ({ open, onOpenChan
     onOpenChange(false);
   };
 
+  const handleCnpjSearch = () => {
+    const cnpj = form.getValues('cnpj');
+    if (cnpj.length < 14) {
+      toast({
+        title: "CNPJ inválido",
+        description: "Por favor, digite um CNPJ válido",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsSearching(true);
+    
+    // Simulate API call to Receita Federal
+    setTimeout(() => {
+      // Mock data for demo purposes
+      form.setValue('companyName', 'Empresa Exemplo Ltda.');
+      form.setValue('address', 'Av. Paulista, 1000, São Paulo - SP');
+      setIsSearching(false);
+      
+      toast({
+        title: "CNPJ encontrado",
+        description: "Dados carregados com sucesso",
+      });
+    }, 1500);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">Adicionar Novo Cliente</DialogTitle>
         </DialogHeader>
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-end">
               <FormField
                 control={form.control}
                 name="cnpj"
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormLabel>CNPJ</FormLabel>
-                    <div className="flex gap-2">
-                      <FormControl>
-                        <Input placeholder="Digite o CNPJ" {...field} />
-                      </FormControl>
-                      <Button 
-                        type="button" 
-                        onClick={fetchCompanyData} 
-                        disabled={loading}
-                        className="whitespace-nowrap"
-                      >
-                        {loading ? "Buscando..." : "Buscar Dados"}
-                      </Button>
-                    </div>
+                    <FormControl>
+                      <Input placeholder="00.000.000/0001-00" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              <Button 
+                type="button" 
+                onClick={handleCnpjSearch}
+                className="mb-[2px]"
+                disabled={isSearching}
+              >
+                {isSearching ? "Buscando..." : <SearchIcon className="h-4 w-4" />}
+              </Button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Razão Social</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Razão social (importada)" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="value"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Valor</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Digite o valor" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="companyName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Razão Social</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Razão Social (importada)" {...field} readOnly />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             
             <FormField
               control={form.control}
@@ -184,7 +151,7 @@ export const AddClientModal: React.FC<AddClientModalProps> = ({ open, onOpenChan
                 <FormItem>
                   <FormLabel>Endereço</FormLabel>
                   <FormControl>
-                    <Input placeholder="Endereço (importado)" {...field} />
+                    <Input placeholder="Endereço (importado)" {...field} readOnly />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -213,7 +180,7 @@ export const AddClientModal: React.FC<AddClientModalProps> = ({ open, onOpenChan
                   <FormItem>
                     <FormLabel>Telefone do Responsável</FormLabel>
                     <FormControl>
-                      <Input placeholder="Digite o telefone do responsável" {...field} />
+                      <Input placeholder="(00) 00000-0000" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -227,13 +194,40 @@ export const AddClientModal: React.FC<AddClientModalProps> = ({ open, onOpenChan
                   <FormItem>
                     <FormLabel>E-mail do Responsável</FormLabel>
                     <FormControl>
-                      <Input placeholder="Digite o e-mail do responsável" {...field} />
+                      <Input placeholder="email@exemplo.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+            
+            <FormField
+              control={form.control}
+              name="value"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Valor</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="R$ 0,00" 
+                      {...field} 
+                      onChange={(e) => {
+                        // Basic formatting for currency input
+                        const value = e.target.value.replace(/\D/g, '');
+                        if (value) {
+                          const numericValue = parseFloat(value) / 100;
+                          field.onChange(`R$ ${numericValue.toFixed(2).replace('.', ',')}`);
+                        } else {
+                          field.onChange('');
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             
             <div className="bg-slate-100 p-4 rounded-md">
               <h3 className="text-sm font-medium mb-2">Status do Cliente:</h3>

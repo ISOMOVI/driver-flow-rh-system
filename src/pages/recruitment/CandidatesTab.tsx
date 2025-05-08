@@ -22,12 +22,15 @@ const getStatusDisplay = (status: string) => {
 };
 
 const CandidatesTab = () => {
+  console.log("Rendering CandidatesTab");
   const [addModalOpen, setAddModalOpen] = useState(false);
   
   // Filter candidates that are in process (not approved or rejected)
   const activeCandidates = mockCandidates.filter(
     candidate => !['approved', 'rejected'].includes(candidate.status)
   );
+  
+  console.log(`CandidatesTab: Found ${activeCandidates.length} active candidates`);
 
   return (
     <div className="space-y-4">
