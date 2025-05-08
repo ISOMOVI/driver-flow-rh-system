@@ -1,11 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { mockCandidates, mockDrivers } from '@/services/mockData';
+import { ExportHistoryModal } from '@/components/recruitment/ExportHistoryModal';
 
 const HistoryTab = () => {
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  
   // Combining all candidates and drivers for history
   const allCandidates = [...mockCandidates, ...mockDrivers];
   
@@ -30,7 +33,13 @@ const HistoryTab = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Histórico de Candidatos</h2>
-        <Button variant="outline">Exportar</Button>
+        <Button 
+          variant="outline" 
+          onClick={() => setExportModalOpen(true)}
+          className="border-indigo-200 text-indigo-700 hover:text-indigo-800 hover:bg-indigo-50"
+        >
+          Exportar
+        </Button>
       </div>
       
       <div className="border rounded-md">
@@ -65,6 +74,11 @@ const HistoryTab = () => {
           </TableBody>
         </Table>
       </div>
+      
+      <ExportHistoryModal
+        open={exportModalOpen}
+        onOpenChange={setExportModalOpen}
+      />
     </div>
   );
 };

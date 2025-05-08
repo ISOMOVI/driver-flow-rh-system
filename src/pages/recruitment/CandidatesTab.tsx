@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { mockCandidates } from '@/services/mockData';
+import { AddCandidateModal } from '@/components/recruitment/AddCandidateModal';
 
 // Helper function to convert status to human-readable text
 const getStatusDisplay = (status: string) => {
@@ -21,6 +22,8 @@ const getStatusDisplay = (status: string) => {
 };
 
 const CandidatesTab = () => {
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  
   // Filter candidates that are in process (not approved or rejected)
   const activeCandidates = mockCandidates.filter(
     candidate => !['approved', 'rejected'].includes(candidate.status)
@@ -30,7 +33,12 @@ const CandidatesTab = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Candidatos em Processo</h2>
-        <Button>Adicionar Candidato</Button>
+        <Button 
+          onClick={() => setAddModalOpen(true)} 
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-md"
+        >
+          Adicionar Candidato
+        </Button>
       </div>
       
       <Table>
@@ -70,6 +78,11 @@ const CandidatesTab = () => {
           })}
         </TableBody>
       </Table>
+      
+      <AddCandidateModal 
+        open={addModalOpen}
+        onOpenChange={setAddModalOpen}
+      />
     </div>
   );
 };
