@@ -16,6 +16,15 @@ Subpágina para gerenciamento de informações do perfil do usuário.
 - Gerenciamento de preferências básicas
 - Upload e edição de foto de perfil
 
+### AppearanceSettings.tsx
+
+Subpágina para gerenciamento de configurações visuais da aplicação.
+
+**Características:**
+- Configuração do tamanho da fonte (pequeno, médio, grande)
+- Visualização em tempo real das alterações de fonte
+- Interface intuitiva para seleção de preferências visuais
+
 ### SecuritySettings.tsx
 
 Subpágina para gerenciamento de configurações de segurança.
@@ -57,6 +66,12 @@ Subpágina para gerenciamento de integrações com sistemas externos.
 3. Sistema valida os dados
 4. Alterações são salvas e refletidas imediatamente
 
+### Aparência
+1. Usuário acessa configurações de aparência
+2. Seleciona o tamanho de fonte desejado
+3. Visualiza o resultado em tempo real
+4. As preferências são salvas automaticamente
+
 ### Segurança
 1. Usuário acessa configurações de segurança
 2. Pode alterar senha ou configurar 2FA
@@ -80,8 +95,9 @@ Subpágina para gerenciamento de integrações com sistemas externos.
 As configurações do usuário afetam a experiência na aplicação:
 
 - Preferências de perfil determinam como o usuário é identificado
-- Configurações de notificação controlam quais alertas o usuário recebe
+- Configurações de aparência controlam o tamanho da fonte utilizada
 - Preferências de segurança protegem o acesso à conta
+- Configurações de notificação controlam quais alertas o usuário recebe
 - Integrações expandem a funcionalidade da plataforma
 
 ## Armazenamento de Preferências

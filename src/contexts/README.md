@@ -24,6 +24,18 @@ Este diretório contém os contextos React utilizados para gerenciamento de esta
 - `logout()`: Função para desconectar usuário
 - `hasPermission(permission)`: Função para verificar se o usuário tem uma permissão específica
 
+### ThemeContext
+
+`ThemeContext` é o contexto para gerenciamento das preferências de interface do usuário.
+
+**Funcionalidades:**
+- Configuração do tamanho da fonte
+- Armazenamento das preferências do usuário
+
+**API exposta:**
+- `fontSize`: String com o tamanho atual da fonte ('small', 'medium', 'large')
+- `setFontSize(size)`: Função para alterar o tamanho da fonte
+
 ## Padrões de Implementação
 
 ### Provider Pattern
@@ -32,7 +44,9 @@ Os contextos utilizam o padrão Provider do React para disponibilizar estado e f
 
 ```tsx
 <AuthProvider>
-  <App />
+  <ThemeProvider>
+    <App />
+  </ThemeProvider>
 </AuthProvider>
 ```
 
@@ -42,14 +56,15 @@ Para cada contexto, existe um hook correspondente que facilita o consumo do cont
 
 ```tsx
 const { isAuthenticated, currentUser, logout } = useAuth();
+const { fontSize, setFontSize } = useTheme();
 ```
 
 ## Integração com o Sistema
 
 - `AuthContext` é fornecido no nível mais alto da aplicação em `App.tsx`
+- `ThemeProvider` é fornecido logo abaixo do AuthProvider para configuração de aparência
 - `ProtectedRoute` utiliza `useAuth()` para verificar autenticação e permissões
-- Componentes de UI adaptam-se com base nas informações do usuário atual
-- Operações que requerem permissões específicas utilizam `hasPermission()`
+- Componentes de UI adaptam-se com base nas preferências do usuário
 
 ## Implementação Atual vs. Futura
 
@@ -66,7 +81,7 @@ Em uma implementação futura:
 
 ## Melhores Práticas
 
-1. **Separação de Preocupações**: Manter a lógica de autenticação separada da UI
+1. **Separação de Preocupações**: Manter a lógica de autenticação e tema separada da UI
 2. **Desempenho**: Evitar renderizações desnecessárias ao atualizar o contexto
 3. **Segurança**: Nunca armazenar senhas em texto plano ou em estado persistente
 4. **Tratamento de Erros**: Fornecer feedback claro sobre falhas de autenticação

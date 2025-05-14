@@ -1,63 +1,15 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useTheme } from '@/contexts/ThemeContext';
-import { Sun, Moon } from 'lucide-react';
 
 const AppearanceSettings = () => {
-  const { theme, toggleTheme, fontSize, setFontSize } = useTheme();
+  const { fontSize, setFontSize } = useTheme();
   
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Tema</CardTitle>
-          <CardDescription>
-            Personalize a aparência da aplicação com tema claro ou escuro.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Sun className="h-5 w-5 text-yellow-500" />
-              <Label htmlFor="theme-toggle">Alternar Tema</Label>
-              <Moon className="h-5 w-5 text-blue-500" />
-            </div>
-            <Switch 
-              id="theme-toggle" 
-              checked={theme === 'dark'} 
-              onCheckedChange={toggleTheme} 
-            />
-          </div>
-          
-          <div className="grid gap-2">
-            <Label>Escolha um Tema</Label>
-            <div className="grid grid-cols-2 gap-4 pt-2">
-              <Button
-                variant={theme === 'light' ? 'default' : 'outline'}
-                className="justify-start"
-                onClick={() => theme !== 'light' && toggleTheme()}
-              >
-                <Sun className="mr-2 h-4 w-4" />
-                <span>Claro</span>
-              </Button>
-              <Button
-                variant={theme === 'dark' ? 'default' : 'outline'}
-                className="justify-start"
-                onClick={() => theme !== 'dark' && toggleTheme()}
-              >
-                <Moon className="mr-2 h-4 w-4" />
-                <span>Escuro</span>
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      
       <Card>
         <CardHeader>
           <CardTitle>Tamanho da Fonte</CardTitle>
