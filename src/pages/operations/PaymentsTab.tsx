@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -8,9 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar, Download, FileText, Upload, Filter } from 'lucide-react';
 import { mockPayments } from '@/services/mockData';
 import { Payment } from '@/types/operations';
+import PaymentReceiptModal from '@/components/operations/PaymentReceiptModal';
+import { toast } from '@/components/ui/use-toast';
 
 const PaymentsTab = () => {
   const [activeTab, setActiveTab] = useState('fixed');
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [receiptModalOpen, setReceiptModalOpen] = useState(false);
   
   // Filter payments by driver type
   const fixedDriverPayments = mockPayments.filter(payment => payment.driverType === 'fixed');
@@ -67,6 +70,22 @@ const PaymentsTab = () => {
     return date.toLocaleDateString('pt-BR');
   };
   
+  // Handle viewing receipt
+  const handleViewReceipt = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setReceiptModalOpen(true);
+  };
+  
+  // Handle payment process
+  const handlePayment = (payment: Payment) => {
+    // In a real implementation, we'd process the payment
+    // For now, just show a toast
+    toast({
+      title: "Pagamento processado",
+      description: `Pagamento para ${payment.driverName} processado com sucesso.`,
+    });
+  };
+  
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -89,6 +108,7 @@ const PaymentsTab = () => {
           <TabsTrigger value="sporadic">Entregadores Esporádicos</TabsTrigger>
         </TabsList>
         
+        {/* Fixed Drivers Tab */}
         <TabsContent value="fixed" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
@@ -171,14 +191,19 @@ const PaymentsTab = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">Ver</Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={() => handleViewReceipt(payment)}
+                          >
+                            Ver Recibo
+                          </Button>
                           {payment.status === 'pending' && (
-                            <Button size="sm">Pagar</Button>
-                          )}
-                          {payment.status === 'paid' && payment.receiptUrl && (
-                            <Button size="sm" variant="outline">
-                              <Download className="h-4 w-4 mr-1" />
-                              Recibo
+                            <Button 
+                              size="sm"
+                              onClick={() => handlePayment(payment)}
+                            >
+                              Pagar
                             </Button>
                           )}
                         </div>
@@ -191,6 +216,7 @@ const PaymentsTab = () => {
           </Card>
         </TabsContent>
         
+        {/* Sporadic Drivers Tab */}
         <TabsContent value="sporadic" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
@@ -277,14 +303,19 @@ const PaymentsTab = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">Ver</Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            onClick={() => handleViewReceipt(payment)}
+                          >
+                            Ver Recibo
+                          </Button>
                           {payment.status === 'pending' && (
-                            <Button size="sm">Pagar</Button>
-                          )}
-                          {payment.status === 'paid' && payment.receiptUrl && (
-                            <Button size="sm" variant="outline">
-                              <Download className="h-4 w-4 mr-1" />
-                              Recibo
+                            <Button 
+                              size="sm"
+                              onClick={() => handlePayment(payment)}
+                            >
+                              Pagar
                             </Button>
                           )}
                         </div>
@@ -297,6 +328,13 @@ const PaymentsTab = () => {
           </Card>
         </TabsContent>
       </Tabs>
+      
+      {/* Payment Receipt Modal */}
+      <PaymentReceiptModal 
+        payment={selectedPayment} 
+        open={receiptModalOpen} 
+        onOpenChange={setReceiptModalOpen} 
+      />
     </div>
   );
 };

@@ -34,6 +34,7 @@ const Settings = () => {
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
           <TabsList>
             <TabsTrigger value="profile">Perfil</TabsTrigger>
+            <TabsTrigger value="appearance">Aparência</TabsTrigger>
             <TabsTrigger value="security">Segurança</TabsTrigger>
             <TabsTrigger value="notifications">Notificações</TabsTrigger>
             <TabsTrigger value="integrations">Integrações</TabsTrigger>
