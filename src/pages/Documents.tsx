@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,9 +7,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { FileText, Upload, Download, Search, Filter, Plus } from 'lucide-react';
+import DocumentTypesModal from '@/components/documents/DocumentTypesModal';
 
 const Documents = () => {
   const [activeTab, setActiveTab] = useState('all');
+  const [isDocumentTypesModalOpen, setIsDocumentTypesModalOpen] = useState(false);
 
   // Mock documents data
   const documents = [
@@ -134,6 +135,13 @@ const Documents = () => {
     }
   };
 
+  // Handle creating a new document
+  const handleNewDocument = () => {
+    console.log('Creating new document');
+    setIsDocumentTypesModalOpen(false);
+    // Here you would implement the logic to create a new document
+  };
+
   return (
     <MainLayout>
       <div className="space-y-6">
@@ -144,10 +152,17 @@ const Documents = () => {
               Gerencie contratos, recibos e documentos de entregadores e empresas.
             </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Novo Documento
+          <Button onClick={() => setIsDocumentTypesModalOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" /> Arquivos
           </Button>
         </div>
+
+        {/* Document Types Modal */}
+        <DocumentTypesModal
+          open={isDocumentTypesModalOpen}
+          onOpenChange={setIsDocumentTypesModalOpen}
+          onNewDocument={handleNewDocument}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>

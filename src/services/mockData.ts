@@ -1,3 +1,4 @@
+
 import { Candidate } from '../types/recruitment';
 import { Driver, Attendance, Client, Payment, DriverType, DriverPaymentMethod, PaymentStatus } from '../types/operations';
 import { User } from '@/types/users';
@@ -318,7 +319,7 @@ export const mockUsers: User[] = [
     id: 'user-1',
     name: 'Admin Master',
     email: 'admin@rhentregadores.com',
-    password: '123456', // Simplified password for testing
+    password: '123457', // Updated password from 123456 to 123457
     role: 'admin',
     createdAt: '2023-01-01T10:00:00Z',
     lastLogin: '2023-05-01T08:30:00Z',
