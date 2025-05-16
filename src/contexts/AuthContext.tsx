@@ -27,19 +27,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     console.log("AuthProvider: Checking for saved user");
     const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      try {
+    
+    try {
+      if (savedUser) {
         const parsedUser = JSON.parse(savedUser);
         console.log("AuthProvider: Found saved user", parsedUser);
         setCurrentUser(parsedUser);
-      } catch (error) {
-        console.error('Failed to parse saved user:', error);
-        localStorage.removeItem('currentUser');
+      } else {
+        console.log("AuthProvider: No saved user found");
       }
-    } else {
-      console.log("AuthProvider: No saved user found");
+    } catch (error) {
+      console.error('Failed to parse saved user:', error);
+      localStorage.removeItem('currentUser');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {

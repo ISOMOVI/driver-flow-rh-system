@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -53,15 +54,12 @@ const App = () => {
                 {/* Public routes */}
                 <Route path="/login" element={<Login />} />
                 
-                {/* Protected routes */}
-                <Route 
-                  path="/" 
-                  element={
-                    <ProtectedRoute>
-                      <Index />
-                    </ProtectedRoute>
-                  } 
-                />
+                {/* Root path redirect to login if not authenticated */}
+                <Route path="/" element={
+                  <ProtectedRoute>
+                    <Index />
+                  </ProtectedRoute>
+                } />
                 
                 {/* Settings routes */}
                 <Route 
@@ -156,7 +154,7 @@ const App = () => {
                   element={<Navigate to="/operations/payments" replace />}
                 />
                 
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                {/* Catch-all route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
